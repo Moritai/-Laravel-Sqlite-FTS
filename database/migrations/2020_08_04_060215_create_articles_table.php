@@ -23,9 +23,6 @@ class CreateArticlesTable extends Migration
         // CREATE VIRTUAL TABLE hoge_fts USING fts4( words TEXT )
         // FTSテーブルでは値がすべて文字列扱いになってしまうので、実際に使用するときはメインのテーブルと全文検索用のFTSテーブルにわけて使う
         DB::statement('CREATE VIRTUAL TABLE articles_fts USING fts5(title, body)');
-
-        // DB::statement('CREATE ');
-
     }
 
     /**

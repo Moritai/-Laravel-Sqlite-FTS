@@ -9,11 +9,6 @@ use  DB; //SQL文を直接書くために使用
 
 class ArticleController extends Controller
 {
-    // private $bigram;
-
-    // function __construct(){
-    //     $this->bigram = new Bigram();
-    // }
     //バリデーション省略
     function store(Request $request){
         $article = Article::Create([
