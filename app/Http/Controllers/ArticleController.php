@@ -32,19 +32,27 @@ class ArticleController extends Controller
 
 
     function getArticles(Request $request){        
-        // dd("test");
-        // SELECT * FROM hoge h INNER JOIN hoge_fts hf ON h.id = hf.docid WHERE words MATCH "ho og ge"
-        // $result = DB::select('select * from articles INNER JOIN articles_fts ON articles.id = articles_fts_content.docid where  articles_fts MATCH ?', ['人殺し']);
-
-
-        // OKなクエリ
-        // $result = DB::select('select * from articles_fts where articles_fts.rowid = 2');
-
+        // トークン分割
         $bigram = new Bigram();
         $keyword = $bigram->convert_to_bigram($request->keyword, true);
-        // dd($keyword);
-        // ORDER BY rankでよりマッチしているものが
+
+        // ORDER BY rankでよりマッチしているものが上にくるようにする。
         $result = DB::select('select articles.* from articles INNER JOIN articles_fts ON articles.id = articles_fts.rowid where articles_fts MATCH ? ORDER BY rank', [$keyword]);
+        
+        //ページネーション機能を付与 
+        $result = $this->arrayPaginator($result, $request);
         return $result;
+    }
+
+    function arrayPaginator($array, $request){
+        // リクエストのbodyにpageキーがあればその値を返し、なければ１を返す。
+        $page = $request->input('page', 1);
+        // 一ページが持つデータ数
+        $perPage = 10;
+        $offset = ($page * $perPage) - $perPage;
+
+        // ページネーションを実行
+        return new \Illuminate\Pagination\LengthAwarePaginator(array_slice($array, $offset, $perPage, true), count($array), $perPage, $page,
+            ['path' => $request->url(), 'query' => $request->query()]);
     }
 }
