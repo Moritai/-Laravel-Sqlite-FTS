@@ -66,9 +66,10 @@ class Bigram
                    $bigram .= $glue.$character;
                }
            }
-            $glue = ' ';
+            $glue = " ";
        }
- 
+
+       utf8_encode($bigram);
        return $bigram;
    }
  
