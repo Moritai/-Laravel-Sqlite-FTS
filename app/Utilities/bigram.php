@@ -8,12 +8,9 @@ class Bigram
     * 文字列を登録・検索用バイグラムに変換する
     *
     * @param string|null $string
-    * @param boolean $for_search_flag
-    *     false:DB保存時に使用する変換方法 あいう→あい いう う
-    *     true:検索時に使用する変換方法 あいう→あい いう　1文字の場合は空文字を返します（そもそも2文字以上で検索しないとヒットしないので構わない）
     * @return string|null
     */
-   public function convert_to_bigram(string $string = null, bool $for_search_flag = false)
+   public function convert_to_bigram(string $string = null)
    {
        if (is_null($string))
        {
@@ -59,23 +56,17 @@ class Bigram
            {
                $bigram .= $glue.$character.$character_list[$index + 1];
            }
-           else
-           {
-               if ($for_search_flag === false)
-               {
-                   $bigram .= $glue.$character;
-               }
-           }
             $glue = " ";
        }
 
-       utf8_encode($bigram);
+    //    utf8_encode($bigram);
        return $bigram;
    }
  
 }
  
-// $string = "本来、人間には、人を殺すことに強烈な抵抗がある。それを兵士として殺戮の場＝戦争に送りだすにはどうするか。元米軍将校による戦慄の研究書。";
+
+// $string = "こんな風に分割される";
 // $bigram = new Bigram();
-// print_r("変換後:". $bigram->convert_to_bigram($string)."\n");
-// var_dump($bigram->convert_to_bigram($string, true));
+// print_r("変換後:\n". $bigram->convert_to_bigram($string)."\n\n");
+
